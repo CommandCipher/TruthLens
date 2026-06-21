@@ -4,16 +4,16 @@ import { useNavigate } from "react-router-dom";
 
 function Analysis() {
   const navigate = useNavigate();
-
+  
   // 🔥 LOADER + ANALYZE BUTTON
   const handleAnalyze = () => {
-    const loader = document.getElementById("loader");
-    loader.style.display = "flex";
+  const loader = document.getElementById("loader");
+  loader.style.display = "flex";
 
-    setTimeout(() => {
-      navigate("/result");
-    }, 2500);
-  };
+  setTimeout(() => {
+    navigate("/result");
+  }, 2500);
+};
 
   //  LOGOUT
   const handleLogout = () => {

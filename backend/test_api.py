@@ -1,12 +1,7 @@
-import requests
-import json
+from services.bias_detector import calculate_bias_score
 
-url = "http://127.0.0.1:5000/analyze"
+result = calculate_bias_score(
+    "The corrupt government spread propaganda and pushed a radical agenda."
+)
 
-data = {
-    "text": "This is outrageous propaganda! It is allegedly a rigged agenda-driven plot. You won't believe this shocking clickbait! However, it is supported by data and documented evidence."
-}
-
-print("Testing the TruthLens API...")
-response = requests.post(url, json=data)
-print(json.dumps(response.json(), indent=2))
+print(result)

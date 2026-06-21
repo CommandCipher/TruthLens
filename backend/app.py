@@ -7,6 +7,8 @@ from services.speculation_detector import calculate_speculation_score
 from services.clickbait_detector import calculate_clickbait_score
 
 from services.score_calculator import calculate_final_reliability
+from services.source_analyzer import analyze_source
+from services.image_analyzer import analyze_image
 
 app = Flask(__name__)
 
@@ -47,9 +49,24 @@ def analyze_endpoint():
         clickbait_result["detected_terms"]
     )
 
+    confidence_score = min(
+        100,
+        50 + len(all_detected_terms) * 10
+    )
+
+    evidence_bias_ratio = round(
+        metrics["evidence_score"] /
+        max(metrics["bias_score"], 1),
+        2
+    )
+
     return jsonify({
 
         "overall_reliability": overall_reliability,
+
+        "confidence_score": confidence_score,
+
+        "evidence_bias_ratio": evidence_bias_ratio,
 
         "scores": {
             "bias": bias_result["bias_score"],
@@ -70,6 +87,29 @@ def analyze_endpoint():
         }
     })
 
+
+@app.route('/analyze-source', methods=['POST'])
+def analyze_source_endpoint():
+
+    data = request.get_json()
+
+    if not data or 'domain' not in data:
+        return jsonify({
+            "error": "No domain provided"
+        }), 400
+
+    result = analyze_source(
+        data["domain"]
+    )
+
+    return jsonify(result)
+
+@app.route('/analyze-image', methods=['POST'])
+def analyze_image_endpoint():
+
+    result = analyze_image("test.jpg")
+
+    return jsonify(result)
 
 @app.route('/')
 def home():
